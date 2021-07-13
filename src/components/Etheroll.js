@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useCallback } from "react";
 import "./all.scss";
 import {
   DetailsCompAll,
@@ -14,7 +14,12 @@ import {
 import coinIco from "../assets/Group 30.svg";
 import balanceIco from "../assets/wallet.svg";
 import coinsideA from "../assets/Clover.svg";
-
+import { UserProvider } from '../context/UserContext'
+import { ContractProvider } from '../context/ContractContext'
+import Coinflip from '../abis/Coinflip.json'
+import Web3 from 'web3'
+import { useUser } from '../context/UserContext'
+import { useContract } from '../context/ContractContext'
 const headers = [
   { header: "player", param: "player" },
   { header: "bet", param: "bet" },
@@ -146,34 +151,27 @@ const Etheroll = () => {
   const [historyView, setHistoryView] = useState(true);
   const [tableData, setTableData] = useState(data.tableDetails);
 
-  const [userAddress, setUserAddress] = useState('');
-  const [userBalance, setUserBalance] = useState('');
-  const [winningsBalance, setWinningsBalance] = useState('');
 
-  const userState = {
+  const web3 = new Web3(Web3.givenProvider)
+  const contractAddress = '0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9'
+  const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress)
+
+  const {
     userAddress,
     setUserAddress,
     userBalance,
     setUserBalance,
     winningsBalance,
     setWinningsBalance,
-  }
+  } = useUser();
 
-  //contract state
-  const [contractBalance, setContractBalance] = useState('');
-  const [owner, setOwner] = useState('');
-  const [network, setNetwork] = useState('');
-  const [isOwner, setIsOwner] = useState(false);
-  const [sentQueryId, setSentQueryId] = useState('');
-  const [awaitingCallbackResponse, setAwaitingCallbackResponse] = useState('');
-  const [awaitingWithdrawal, setAwaitingWithdrawal] = useState('');
 
-  const contractState = {
+  //fetching contract context
+  const  {
     contractBalance,
     setContractBalance,
     owner,
     setOwner,
-    isOwner,
     setIsOwner,
     network,
     setNetwork,
@@ -183,9 +181,24 @@ const Etheroll = () => {
     setAwaitingCallbackResponse,
     awaitingWithdrawal,
     setAwaitingWithdrawal,
-  }
+  } = useContract();
 
-
+  const fetchNetwork = useCallback(async() => {
+    let num = await web3.currentProvider.chainId;
+    if(num === '0x1'){
+      setNetwork('Mainnet')
+    } else if(num === '0x3'){
+      setNetwork('Ropsten')
+    } else if(num === '0x4'){
+      setNetwork('Rinkeby')
+    } else if(num === '0x5'){
+      setNetwork('Goerli')
+    } else if(num === '0x42'){
+      setNetwork('Kovan')
+    } else {
+      setNetwork('N/A')
+    }
+  }, [setNetwork])
 
   const setSelectedValCheck = (val) => {
     console.log(val);
@@ -209,6 +222,7 @@ const Etheroll = () => {
   }, [onlyMeSelected]);
 
   return (
+
     <div className="wrapper">
       <GoBack
         onClick={() => setHistoryView(!historyView)}
@@ -300,6 +314,7 @@ const Etheroll = () => {
         )}
       </div>
     </div>
+
   );
 };
 

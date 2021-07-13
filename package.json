@@ -9,6 +9,7 @@
     "animated-number-react": "^0.1.2",
     "aos": "^2.3.4",
     "bootstrap": "^5.0.2",
+    "ethers": "^5.4.1",
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
     "node-sass": "^5.0.0",

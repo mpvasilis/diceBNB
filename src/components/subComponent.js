@@ -289,7 +289,7 @@ export const BetBlock = ({ value, onClick }) => {
             <span onClick={() => increment(0.01)}>+</span>
           </div>
         </div>
-        <div className="bet-submit flex-x">BET</div>
+        <div className="bet-submit flex-x" onClick={() => {}}>BET</div>
       </div>
     </div>
   );

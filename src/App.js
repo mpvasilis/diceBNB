@@ -11,7 +11,8 @@ import AOS from "aos";
 import Lang1 from "./assets/us.026a8970.svg";
 import Lang2 from "./assets/download (1).svg";
 import Lang3 from "./assets/cn.d09f389e.svg";
-
+import { UserProvider } from './context/UserContext';
+import { ContractProvider } from './context/ContractContext';
 function openLink(id) {}
 
 const Header = ({ style, languages, setLanguage, language }) => {
@@ -24,6 +25,8 @@ const Header = ({ style, languages, setLanguage, language }) => {
       <img src={language.src} style={{ marginLeft: "10px", width: "25px" }} />
     </span>
   );
+
+
 
   return (
     <Navbar expand="lg" className="flex-x-between">
@@ -162,6 +165,46 @@ const Footer = () => {
   );
 };
 function App() {
+
+  const [userAddress, setUserAddress] = useState('');
+  const [userBalance, setUserBalance] = useState('');
+  const [winningsBalance, setWinningsBalance] = useState('');
+
+  const userState = {
+    userAddress,
+    setUserAddress,
+    userBalance,
+    setUserBalance,
+    winningsBalance,
+    setWinningsBalance,
+  }
+
+  //contract state
+  const [contractBalance, setContractBalance] = useState('');
+  const [owner, setOwner] = useState('');
+  const [network, setNetwork] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
+  const [sentQueryId, setSentQueryId] = useState('');
+  const [awaitingCallbackResponse, setAwaitingCallbackResponse] = useState('');
+  const [awaitingWithdrawal, setAwaitingWithdrawal] = useState('');
+
+  const contractState = {
+    contractBalance,
+    setContractBalance,
+    owner,
+    setOwner,
+    isOwner,
+    setIsOwner,
+    network,
+    setNetwork,
+    sentQueryId,
+    setSentQueryId,
+    awaitingCallbackResponse,
+    setAwaitingCallbackResponse,
+    awaitingWithdrawal,
+    setAwaitingWithdrawal,
+  }
+
   AOS.init({
     duration: 800,
     easing: "ease-in-out",
@@ -175,6 +218,8 @@ function App() {
   ];
   const [language, setLanguage] = useState(languages[0]);
   return (
+      <UserProvider value={userState}>
+        <ContractProvider value={contractState}>
     <div className="App">
       <Router>
         <Header
@@ -189,6 +234,8 @@ function App() {
         <Footer />
       </Router>
     </div>
+          </ContractProvider>
+          </UserProvider>
   );
 }
 

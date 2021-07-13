@@ -9,7 +9,7 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
-import CoinFlip from "./components/coinFlip";
+import CoinFlipScreen from "./components/coinFlip";
 import Etheroll from "./components/Etheroll";
 import Faq from "./components/faq";
 
@@ -32,7 +32,7 @@ const Routes = ({ location }) => {
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/Home" />} />
         <Route exact path="/Home" component={Home} />
-        <Route exact path="/CoinFlip" component={CoinFlip} />
+        <Route exact path="/CoinFlip" component={CoinFlipScreen} />
         <Route exact path="/RollDice" component={RollDice} />
         <Route exact path="/RollTwoDice" component={RollTwoDice} />
         <Route exact path="/Etheroll" component={Etheroll} />
