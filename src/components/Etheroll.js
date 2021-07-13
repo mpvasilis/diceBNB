@@ -26,7 +26,7 @@ const data = {
   flipDetails: { coinside: 1, value: "", betValue: "", balance: "100" },
   coinDeatils: [
     {
-      heading: "Winning chances",
+      heading: "Winning chance",
       value: "50.00",
       des: "You will win 0.196 ETH",
       param: "%",
@@ -145,6 +145,47 @@ const Etheroll = () => {
   const [selectedVal, setSelectedVal] = useState(0);
   const [historyView, setHistoryView] = useState(true);
   const [tableData, setTableData] = useState(data.tableDetails);
+
+  const [userAddress, setUserAddress] = useState('');
+  const [userBalance, setUserBalance] = useState('');
+  const [winningsBalance, setWinningsBalance] = useState('');
+
+  const userState = {
+    userAddress,
+    setUserAddress,
+    userBalance,
+    setUserBalance,
+    winningsBalance,
+    setWinningsBalance,
+  }
+
+  //contract state
+  const [contractBalance, setContractBalance] = useState('');
+  const [owner, setOwner] = useState('');
+  const [network, setNetwork] = useState('');
+  const [isOwner, setIsOwner] = useState(false);
+  const [sentQueryId, setSentQueryId] = useState('');
+  const [awaitingCallbackResponse, setAwaitingCallbackResponse] = useState('');
+  const [awaitingWithdrawal, setAwaitingWithdrawal] = useState('');
+
+  const contractState = {
+    contractBalance,
+    setContractBalance,
+    owner,
+    setOwner,
+    isOwner,
+    setIsOwner,
+    network,
+    setNetwork,
+    sentQueryId,
+    setSentQueryId,
+    awaitingCallbackResponse,
+    setAwaitingCallbackResponse,
+    awaitingWithdrawal,
+    setAwaitingWithdrawal,
+  }
+
+
 
   const setSelectedValCheck = (val) => {
     console.log(val);
