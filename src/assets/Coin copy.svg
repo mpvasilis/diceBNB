@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="72" height="72" viewBox="0 0 72 72">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        stroke: #ff6002;
+      }
+
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-size: 45px;
+        font-family: BotrioRegular, Botrio;
+      }
+
+      .cls-4, .cls-6 {
+        fill: none;
+      }
+
+      .cls-5 {
+        stroke: none;
+      }
+
+      .cls-7 {
+        filter: url(#Ellipse_43);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ff6002"/>
+      <stop offset="1" stop-color="#c22de1"/>
+    </linearGradient>
+    <filter id="Ellipse_43">
+      <feOffset dy="4" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.4" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Coin" transform="translate(-154 -346)">
+    <g id="Ellipse_41" data-name="Ellipse 41" class="cls-1" transform="translate(154 346)">
+      <circle class="cls-5" cx="36" cy="36" r="36"/>
+      <circle class="cls-6" cx="36" cy="36" r="35.5"/>
+    </g>
+    <text id="_5" data-name="5" class="cls-2" transform="translate(173 399)"></text>
+    <g data-type="innerShadowGroup">
+      <g class="cls-7" transform="matrix(1, 0, 0, 1, 154, 346)">
+        <circle id="Ellipse_43-2" data-name="Ellipse 43" class="cls-3" cx="36" cy="36" r="36"/>
+      </g>
+      <g id="Ellipse_43-3" data-name="Ellipse 43" class="cls-4" transform="translate(154 346)">
+        <circle class="cls-5" cx="36" cy="36" r="36"/>
+        <circle class="cls-6" cx="36" cy="36" r="35.5"/>
+      </g>
+    </g>
+  </g>
+</svg>
