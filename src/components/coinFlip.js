@@ -140,7 +140,9 @@ const data = {
 
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 
-
+const web3 = new Web3(Web3.givenProvider);
+const contractAddress = '0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9';
+const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const CoinFlipScreen = () => {
 
   const [reload, setReload] = useState(false);
@@ -169,10 +171,8 @@ const CoinFlipScreen = () => {
   useEffect(() => {
     loadWeb3();
   }, [reload]);
-  const web3 = new Web3(Web3.givenProvider);
-  const contractAddress = '0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9';
-  const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
-  console.log(coinflip);
+
+
   const [flipDetails, setFlipDetails] = useState(data.flipDetails);
   const [coins, setCoins] = useState(coinsArr);
   const [id, setId] = useState("0x3fder");
@@ -180,6 +180,7 @@ const CoinFlipScreen = () => {
   const [selectedVal, setSelectedVal] = useState(0);
   const [historyView, setHistoryView] = useState(true);
   const [tableData, setTableData] = useState(data.tableDetails);
+  const [selectedCoin, setSelectedCoin] = useState(0);
 
 
   //fetching user context
@@ -449,6 +450,22 @@ const CoinFlipScreen = () => {
     setSelectedValCheck(+(+selectedVal + +val).toFixed(2));
   };
 
+
+  useEffect(() => {
+  console.log(coins);
+  if(coins[0].selected ===true){
+    console.log("Heads");
+    setSelectedCoin(0);
+  }
+  else{
+    console.log("Tails");
+    setSelectedCoin(1);
+
+
+  }
+  }, [coins])
+
+
   return (
     <div className="wrapper">
       <GoBack
@@ -518,7 +535,7 @@ const CoinFlipScreen = () => {
                     <span onClick={() => increment(0.01)}>+</span>
                   </div>
                 </div>
-                <div className="bet-submit flex-x" onClick={() => {flip("0",selectedVal.toString())}}>BET</div>
+                <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>
               </div>
             </div>
 
