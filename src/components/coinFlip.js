@@ -228,18 +228,11 @@ const CoinFlipScreen = () => {
   }, [setNetwork])
 
 
-  /**
-   * @notice The following state hooks are used only within this functional
-   *         component; ergo, they're not included in useContext.
-   */
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [outcomeMessage, setOutcomeMessage] = useState('');
 
 
-  /**
-   * @notice The following functions fetch both the user's Ethereum data and
-   *         contract data.
-   */
+
 
   const loadUserAddress = useCallback(async() => {
     let accounts = await web3.eth.getAccounts()
@@ -270,12 +263,6 @@ const CoinFlipScreen = () => {
   }, [setOwner])
 
 
-  /**
-   * @notice This function mimics the late React approach of componentDidMount;
-   *         where, this acts as an initialization of the dApp by fetching the
-   *         user's Ether data.
-   */
-
   const loadUserData = useCallback(async() => {
         await loadUserAddress().then(response => {
           setUserAddress(response)
@@ -290,10 +277,6 @@ const CoinFlipScreen = () => {
       ])
 
 
-  /**
-   * @notice This hook acts as an initializer a la componentDidMount.
-   *
-   */
   useEffect(() => {
     // if(userAddress === ''){
     loadUserData()
@@ -302,10 +285,6 @@ const CoinFlipScreen = () => {
 
 
 
-  /**
-   * @notice This hook loads the network and balance of the contract.
-   *
-   */
   useEffect(() => {
     fetchNetwork()
     loadContractBalance()
@@ -314,10 +293,6 @@ const CoinFlipScreen = () => {
     })
   }, [network, fetchNetwork, loadContractBalance, loadOwner, setOwner])
 
-  /**
-   * @notice This hook specifically checks if the user's address matches with
-   *         the owner of the contract.
-   */
   useEffect(() => {
     if(userAddress){
       if(userAddress.length !== 0 && owner.length !== 0){
@@ -332,19 +307,6 @@ const CoinFlipScreen = () => {
 
 
 
-  /**
-   * @notice The following function simulates the flipping of a coin.
-   *
-   * @dev    Upon receipt, the setSentQueryId state is set with the user's
-   *         query ID. Further, the awaiting callback repsonse state is set
-   *         with true which is responsible for looking through the blocks for
-   *         the user's query ID.
-   *
-   * @param {*} oneZero The numeric representation of heads or tails—heads is zero,
-   *                    tails is one.
-   * @param {*} bet The wagered amount.
-   */
-
   const flip = async(oneZero, bet) => {
     setAwaitingCallbackResponse(false)
     let guess = oneZero
@@ -355,26 +317,17 @@ const CoinFlipScreen = () => {
     }
     coinflip.methods.flip(guess).send(config)
         .on('receipt', function(receipt){
-          setSentQueryId(receipt.events.sentQueryId.returnValues[1])
-          setAwaitingCallbackResponse(true)
+          console.log(receipt);
+          setSentQueryId(receipt.events.sentQueryId.returnValues[1]);
+          setAwaitingCallbackResponse(true);
         })
   }
 
-  /**
-   * @notice This function closes the modal when the user hits 'okay,' and resets
-   *         the outcome message to an empty string.
-   */
   const modalMessageReset = () => {
     setModalIsOpen(false)
     setOutcomeMessage('')
   }
 
-  /**
-   * @notice This hook searches through Ethereum's blocks for the Provable query ID.
-   *         Once found, it looks for the event string 'Winner' or 'Loser' and updates
-   *         the modal outcome message. Thereafter, it reloads the user's winnings
-   *         balance and contract balance.
-   */
 
   useEffect(() => {
         if(awaitingCallbackResponse){
@@ -407,26 +360,12 @@ const CoinFlipScreen = () => {
   )
 
 
-
-  /**
-   * @notice This function withdraws the user's winnings balance into the user's
-   *         actual MetaMask wallet.
-   */
-
   const withdrawUserWinnings = () => {
     var balance = winningsBalance
     coinflip.methods.withdrawUserWinnings().send(balance, {from: userAddress})
     setAwaitingWithdrawal(true)
   }
 
-
-  /**
-   * @notice The following functions are reserved for the owner of the contract.
-   *
-   *
-   * @notice This function adds Ether to the contract.
-   * @param {*} x The amount of Ether to transfer into the contract balance.
-   */
 
   const fundContract = (x) => {
     let fundAmt = x
@@ -441,12 +380,6 @@ const CoinFlipScreen = () => {
         })
   }
 
-  /**
-   * @notice This function adds Ether to the user's winnings balance. This is created
-   *         for testing purposes.
-   *
-   * @param {*} x The amount of Ether to transfer to the mapping balance.
-   */
   const fundWinnings = (x) => {
     let fundAmt = x
     let config = {
@@ -460,11 +393,6 @@ const CoinFlipScreen = () => {
         })
   }
 
-  /**
-   * @notice This function withdraws the entire contract balance to the owner.
-   * @dev    The contract balance does not include any users' winnings balances.
-   */
-
   const withdrawAll = () => {
     var balance = contractBalance
     coinflip.methods.withdrawAll().send(balance, {from: userAddress})
@@ -474,12 +402,6 @@ const CoinFlipScreen = () => {
         })
   }
 
-
-  /**
-   * @notice This hook communicates to the user when their withdrawal of funds from
-   *         their winnings balance succeeded. Upon receipt, their winnings balance and
-   *         actual user balance reloads.
-   */
   useEffect(() => {
     if(awaitingWithdrawal){
       coinflip.events.userWithdrawal({
@@ -495,11 +417,6 @@ const CoinFlipScreen = () => {
   }, [awaitingWithdrawal, winningsBalance, userBalance, userAddress, loadUserBalance, loadWinningsBalance, setAwaitingWithdrawal])
 
 
-
-  /**
-   * @notice This hook controls the modal which tells the user whether they won/lost the coinflip or
-   *          the success of their withdrawal.
-   */
   useEffect(() => {
     if(outcomeMessage !== ''){
       setModalIsOpen(true)
@@ -527,6 +444,10 @@ const CoinFlipScreen = () => {
       setTableData([...data.tableDetails.filter((i, k) => i.player == id)]);
     } else setTableData([...data.tableDetails]);
   }, [onlyMeSelected]);
+
+  const increment = (val) => {
+    setSelectedValCheck(+(+selectedVal + +val).toFixed(2));
+  };
 
   return (
     <div className="wrapper">
@@ -580,11 +501,27 @@ const CoinFlipScreen = () => {
             >
               Your bet
             </div>
-            <BetBlock
-              value={selectedVal}
-              onClick={(val) => setSelectedValCheck(val)}
-            />
-            <div className="bet-submit flex-x" onClick={() => {flip("0","0.01")}}>BET</div>
+
+            <div className="bet-block">
+              <div></div>
+              <div className="bet-buttons flex-x">
+                <div className="bet-input flex-x">
+                  <div className="flex-x">
+                    <span onClick={() => increment(-0.01)}>-</span>
+                    <input
+                        value={selectedVal}
+                        onChange={(e) => {
+                          var regexp = /^[0-9]*(\.[0-9]{0,2})?$/;
+                          if (regexp.test(e.target.value)) setSelectedValCheck(e.target.value);
+                        }}
+                    />
+                    <span onClick={() => increment(0.01)}>+</span>
+                  </div>
+                </div>
+                <div className="bet-submit flex-x" onClick={() => {flip("0",selectedVal.toString())}}>BET</div>
+              </div>
+            </div>
+
 
           </div>
         </BorderBlock>
