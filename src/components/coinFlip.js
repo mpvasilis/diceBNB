@@ -482,9 +482,9 @@ const CoinFlipScreen = () => {
 
   useEffect(() => {
   axios.get('http://localhost:8081/api/games').then(r=>{
-  console.log(r);
+  console.log(r.data);
   })
-  }, [])
+  })
 
   return (
     <div className="wrapper">
