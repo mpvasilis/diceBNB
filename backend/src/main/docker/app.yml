@@ -1,0 +1,8 @@
+version: '2'
+services:
+  backend-app:
+    build: ../../..
+    container_name: backend-app
+    environment:
+    ports:
+      - 8081:8081

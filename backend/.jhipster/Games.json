@@ -1,0 +1,48 @@
+{
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "address",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "bet",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "beton",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "bettrx",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "game",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "result",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "jackpot",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20210714152654",
+    "dto": "no",
+    "searchEngine": false,
+    "service": "no",
+    "entityTableName": "games",
+    "databaseType": "sql",
+    "readOnly": false,
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

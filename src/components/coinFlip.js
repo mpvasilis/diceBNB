@@ -247,8 +247,13 @@ const CoinFlipScreen = () => {
   }, [setContractBalance])
 
   const loadUserBalance = useCallback(async(user) => {
-    let userBal = await web3.eth.getBalance(user)
-    setUserBalance(Number.parseFloat(web3.utils.fromWei(userBal)).toPrecision(3))
+      try{
+        let userBal = await web3.eth.getBalance(user)
+        setUserBalance(Number.parseFloat(web3.utils.fromWei(userBal)).toPrecision(3))
+      }
+       catch (e) {
+         console.error(e);
+       }
   }, [setUserBalance])
 
   const loadWinningsBalance = useCallback(async(userAdd) => {
@@ -487,7 +492,7 @@ const CoinFlipScreen = () => {
             <div>
               <img src={balanceIco} />
               <span>
-                {flipDetails.balance}{" "}
+                {userBalance}{" "}
                 <span style={{ fontSize: "80%", opacity: "1" }}>ETH</span>
               </span>
             </div>
@@ -538,7 +543,8 @@ const CoinFlipScreen = () => {
                 <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>
               </div>
             </div>
-
+            {userBalance ? <></>  :  <div className="web3-required"><h1>Log in to MetaMask</h1><p>Please log in to MetaMask to proceed</p><h1
+                className="mobile">Log in to Trust</h1><p className="mobile">Please log in to Trust to proceed</p></div> }
 
           </div>
         </BorderBlock>
