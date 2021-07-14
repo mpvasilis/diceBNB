@@ -9,9 +9,6 @@ import { HeaderUtil } from '../../client/header-util';
 import { LoggingInterceptor } from '../../client/interceptors/logging.interceptor';
 
 @Controller('api/games')
-@UseGuards(AuthGuard, RolesGuard)
-@UseInterceptors(LoggingInterceptor)
-@ApiBearerAuth()
 @ApiUseTags('games')
 export class GamesController {
   logger = new Logger('GamesController');
@@ -19,7 +16,6 @@ export class GamesController {
   constructor(private readonly gamesService: GamesService) {}
 
   @Get('/')
-  @Roles(RoleType.USER)
   @ApiResponse({
     status: 200,
     description: 'List all records',
@@ -37,7 +33,6 @@ export class GamesController {
   }
 
   @Get('/:id')
-  @Roles(RoleType.USER)
   @ApiResponse({
     status: 200,
     description: 'The found record',
@@ -48,7 +43,6 @@ export class GamesController {
   }
 
   @PostMethod('/')
-  @Roles(RoleType.ADMIN)
   @ApiOperation({ title: 'Create games' })
   @ApiResponse({
     status: 201,

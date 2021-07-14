@@ -18,6 +18,12 @@ import Coinflip from '../abis/Coinflip.json'
 import Web3 from 'web3';
 import { useUser } from '../context/UserContext';
 import { useContract } from '../context/ContractContext';
+import {
+  BrowserView,
+  MobileView,
+  isBrowser,
+  isMobile
+} from "react-device-detect";
 
 const headers = [
   { header: "player", param: "player" },
@@ -543,8 +549,11 @@ const CoinFlipScreen = () => {
                 <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>
               </div>
             </div>
-            {userBalance ? <></>  :  <div className="web3-required"><h1>Log in to MetaMask</h1><p>Please log in to MetaMask to proceed</p><h1
-                className="mobile">Log in to Trust</h1><p className="mobile">Please log in to Trust to proceed</p></div> }
+            {userBalance ? <></>  :  <><BrowserView>
+              <div className="web3-required"><h1>Log in to MetaMask</h1><p>Please log in to MetaMask to proceed</p> </div></BrowserView>
+              <MobileView>
+              <div className="web3-required"><h1 className="mobile">Log in to Trust</h1><p className="mobile">Please log in to Trust to proceed</p></div>
+              </MobileView></> }
 
           </div>
         </BorderBlock>
