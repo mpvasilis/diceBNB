@@ -11,7 +11,6 @@ import { GamesModule } from './module/games.module';
   imports: [
     TypeOrmModule.forRoot(ormconfig),
     AuthModule,
-    ,
     GamesModule
     // jhipster-needle-add-entity-module-to-main - JHipster will add entity modules here, do not remove
   ],
