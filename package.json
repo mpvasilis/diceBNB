@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "animated-number-react": "^0.1.2",
     "aos": "^2.3.4",
+    "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
     "ethers": "^5.4.1",
     "express": "^4.17.1",

@@ -24,6 +24,7 @@ import {
   isBrowser,
   isMobile
 } from "react-device-detect";
+import axios from "axios";
 
 const headers = [
   { header: "player", param: "player" },
@@ -476,6 +477,14 @@ const CoinFlipScreen = () => {
   }
   }, [coins])
 
+
+
+
+  useEffect(() => {
+  axios.get('http://localhost:8081/api/games').then(r=>{
+  console.log(r);
+  })
+  }, [])
 
   return (
     <div className="wrapper">
