@@ -148,7 +148,7 @@ const data = {
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 
 const web3 = new Web3(Web3.givenProvider);
-const contractAddress = '0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9';
+const contractAddress = '0x9457F4FA898eb955774E0094d725bDCDA236dEef';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9
 const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const CoinFlipScreen = () => {
 
@@ -432,9 +432,9 @@ const CoinFlipScreen = () => {
 
   useEffect(() => {
     if(outcomeMessage !== ''){
+      alert(outcomeMessage);
       setModalIsOpen(true)
     }
-    return
   }, [outcomeMessage])
 
   const setSelectedValCheck = (val) => {
