@@ -148,7 +148,7 @@ const data = {
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 
 const web3 = new Web3(Web3.givenProvider);
-const contractAddress = '0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9
+const contractAddress = '0x391fe6a27937e761A7f19832363A0a729123AE06';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9   0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC 0x391fe6a27937e761A7f19832363A0a729123AE06
 const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const CoinFlipScreen = () => {
 
