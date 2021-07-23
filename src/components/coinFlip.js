@@ -148,7 +148,7 @@ const data = {
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 
 const web3 = new Web3(Web3.givenProvider);
-const contractAddress = '0x9457F4FA898eb955774E0094d725bDCDA236dEef';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9
+const contractAddress = '0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9
 const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const CoinFlipScreen = () => {
 
@@ -291,6 +291,15 @@ const CoinFlipScreen = () => {
 
 
   useEffect(() => {
+    coinflip.events.allEvents({
+    }, function(error, event){ console.log(event); })
+        .on('data', function(event){
+          console.log(event); // same results as the optional callback above
+        })
+        .on('changed', function(event){
+          // remove event from local database
+        })
+        .on('error', console.error);
     // if(userAddress === ''){
     loadUserData()
     // }
@@ -332,6 +341,7 @@ const CoinFlipScreen = () => {
         .on('receipt', function(receipt){
           console.log(receipt);
           setSentQueryId(receipt.events.sentQueryId.returnValues[1]);
+          console.log(receipt.events.sentQueryId.returnValues[1])
           setAwaitingCallbackResponse(true);
         })
   }
@@ -342,11 +352,16 @@ const CoinFlipScreen = () => {
   }
 
 
+
+
   useEffect(() => {
+
         if(awaitingCallbackResponse){
-          coinflip.events.callbackReceived({
-            fromBlock: 'latest'
-          }, function(error, event){ if(event.returnValues[0] === sentQueryId){
+
+          coinflip.events.callbackReceived({}, function(error, event){ if(true){ //event.returnValues[0] === sentQueryId
+          alert(error);
+            alert(event);
+
             if(event.returnValues[1] === 'Winner'){
               setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
               loadWinningsBalance(userAddress)
@@ -479,17 +494,16 @@ const CoinFlipScreen = () => {
 
 
 
-
   useEffect(() => {
   axios.get('http://localhost:8081/api/games').then(r=>{
   console.log(r.data);
   })
   })
-
+// setHistoryView(!historyView)
   return (
     <div className="wrapper">
       <GoBack
-        onClick={() => setHistoryView(!historyView)}
+        onClick={() => fundContract("1") }
         historyView={historyView}
       />
       <div className="coin-flip flex">

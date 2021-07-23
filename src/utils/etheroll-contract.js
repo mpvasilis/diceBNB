@@ -15,7 +15,7 @@ const contractAddresses = {
 const etherscanUrls = {
   [Networks.mainnet]: 'https://etherscan.io',
   [Networks.ropsten]: 'https://ropsten.etherscan.io',
-};
+};ioioiooioioiioioioio
 
 
 const getPayout = (betSize, winningChances) => (
