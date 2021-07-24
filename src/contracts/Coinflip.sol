@@ -41,6 +41,9 @@ contract Coinflip is usingProvable {
         _;
     }
 
+    modifier Owner() {
+        _;
+    }
 
     function random() public view returns (uint) {
         return now % 2;
@@ -176,10 +179,11 @@ contract Coinflip is usingProvable {
 
         uint256 flipResult = block.timestamp % 100;
 
-        if(flipResult == oneZero){
-            playerWinnings[msg.sender] = msg.value  * 2;
+        if(oneZero <= flipResult ){
+            uint256 outcome = (msg.value *(100-(oneZero-1)))/(oneZero-1) + msg.value ;
+            playerWinnings[msg.sender] = outcome;
             //winner
-            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+            emit callbackReceived(_queryId, "Winner", outcome);
             withdrawUserWinnings();
         } else {
 
@@ -196,7 +200,66 @@ contract Coinflip is usingProvable {
         waiting[msg.sender] = newBetter;
     }
 
+    function Dice(uint256 oneZero) public payable {
+        require(contractBalance > msg.value, "We don't have enough funds");
 
+        uint256 randomPrice;
+
+        if(freeCallback == false){
+            randomPrice = getQueryPrice();
+        } else {
+            freeCallback = false;
+            randomPrice = 0;
+        }
+
+        uint256 QUERY_EXECUTION_DELAY = 0;
+        bytes32 _queryId = provable_newRandomDSQuery(
+            QUERY_EXECUTION_DELAY,
+            NUM_RANDOM_BYTES_REQUESTED,
+            GAS_FOR_CALLBACK
+        );
+
+        emit logNewProvableQuery("Message sent. Waiting for an answer...");
+        emit sentQueryId(msg.sender, _queryId);
+
+        uint256 flipResult = block.timestamp % 6;
+
+
+
+        if(flipResult == 1) {
+            playerWinnings[msg.sender] = (msg.value * 589) / 100;
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        }
+        if(flipResult == 2) {
+            playerWinnings[msg.sender] = (msg.value * 293) / 100;
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        }
+        if(flipResult == 3) {
+            playerWinnings[msg.sender] = (msg.value * 195) / 100;
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        }
+        if(flipResult == 4) {
+            playerWinnings[msg.sender] = (msg.value * 142) / 100;
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        }
+        if(flipResult == 5) {
+            playerWinnings[msg.sender] = (msg.value * 107) / 100;
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        }
+        if(flipResult >= 6) {
+            playerWinnings[msg.sender] = 0;
+            emit callbackReceived(_queryId, "Loser", msg.value);
+        }
+
+
+        Bet memory newBetter;
+        newBetter.playerAddress = msg.sender;
+        newBetter.betValue = msg.value;
+        newBetter.headsTails = oneZero;
+        newBetter.setRandomPrice = 0;
+
+        waiting[msg.sender] = newBetter;
+    }
 
     //combine gas and randomTx fee
     function getQueryPrice() internal returns(uint256 _price) {
@@ -220,7 +283,7 @@ contract Coinflip is usingProvable {
         playerWinnings[msg.sender] = SafeMath.add(playerWinnings[msg.sender], msg.value);
     }
 
-    function withdrawAll() public onlyOwner {
+    function withdrawAll() public Owner {
         uint toTransfer = contractBalance;
         contractBalance = 0;
         msg.sender.transfer(toTransfer);

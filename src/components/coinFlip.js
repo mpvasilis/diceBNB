@@ -298,9 +298,6 @@ const CoinFlipScreen = () => {
     coinflip.events.allEvents({
     }, function(error, event){ console.log(event); })
         .on('data', function(event){
-          MySwal.fire({
-            title: <p>Test</p>,
-          })
           console.log(event); // same results as the optional callback above
           if(event.returnValues[1] === 'Winner'){
             MySwal.fire({
@@ -383,20 +380,13 @@ const CoinFlipScreen = () => {
         if(awaitingCallbackResponse){
 
           coinflip.events.callbackReceived({}, function(error, event){ if(true){ //event.returnValues[0] === sentQueryI
-
-
             if(event.returnValues[1] === 'Winner'){
-              MySwal.fire({
-                title: <p>Winner</p>,
-              })
-              setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
+
+             // setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
               loadWinningsBalance(userAddress)
               loadContractBalance()
             } else {
-              MySwal.fire({
-                title: <p>Looser</p>,
-              })
-              setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
+             // setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
               loadWinningsBalance(userAddress)
               loadContractBalance()
             }

@@ -295,12 +295,28 @@ const Etheroll = () => {
         loadWinningsBalance
       ])
 
-
   useEffect(() => {
     coinflip.events.allEvents({
     }, function(error, event){ console.log(event); })
         .on('data', function(event){
           console.log(event); // same results as the optional callback above
+          if(event.returnValues[1] === 'Winner'){
+            MySwal.fire({
+              title: <p>Winner</p>,
+              text:'You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
+            })
+            // setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
+            loadWinningsBalance(userAddress)
+            loadContractBalance()
+          } else {
+            MySwal.fire({
+              title: <p>Looser</p>,
+              text:'You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
+            })
+            //setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
+            loadWinningsBalance(userAddress)
+            loadContractBalance()
+          }
         })
         .on('changed', function(event){
           // remove event from local database
@@ -310,6 +326,7 @@ const Etheroll = () => {
     loadUserData()
     // }
   }, [loadUserData, userAddress])
+
 
 
 
