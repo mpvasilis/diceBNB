@@ -119,9 +119,53 @@ contract Coinflip is usingProvable {
         emit logNewProvableQuery("Message sent. Waiting for an answer...");
         emit sentQueryId(msg.sender, _queryId);
 
-        uint256 flipResult = block.timestamp %2;
+        uint256 flipResult = block.timestamp % 2;
 
-        if(flipResult == 0){
+        if(flipResult == oneZero){
+            playerWinnings[msg.sender] = msg.value  * 2;
+            //winner
+            emit callbackReceived(_queryId, "Winner", msg.value * 2);
+        } else {
+
+            //loser
+            emit callbackReceived(_queryId, "Loser", msg.value);
+        }
+
+        Bet memory newBetter;
+        newBetter.playerAddress = msg.sender;
+        newBetter.betValue = msg.value;
+        newBetter.headsTails = oneZero;
+        newBetter.setRandomPrice = 0;
+
+        waiting[msg.sender] = newBetter;
+    }
+
+
+    function etheroll(uint256 oneZero) public payable {
+        require(contractBalance > msg.value, "We don't have enough funds");
+
+        uint256 randomPrice;
+
+        if(freeCallback == false){
+            randomPrice = getQueryPrice();
+        } else {
+            freeCallback = false;
+            randomPrice = 0;
+        }
+
+        uint256 QUERY_EXECUTION_DELAY = 0;
+        bytes32 _queryId = provable_newRandomDSQuery(
+            QUERY_EXECUTION_DELAY,
+            NUM_RANDOM_BYTES_REQUESTED,
+            GAS_FOR_CALLBACK
+        );
+
+        emit logNewProvableQuery("Message sent. Waiting for an answer...");
+        emit sentQueryId(msg.sender, _queryId);
+
+        uint256 flipResult = block.timestamp % 100;
+
+        if(flipResult == oneZero){
             playerWinnings[msg.sender] = msg.value  * 2;
             //winner
             emit callbackReceived(_queryId, "Winner", msg.value * 2);
