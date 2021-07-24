@@ -133,6 +133,8 @@ contract Coinflip is usingProvable {
             playerWinnings[msg.sender] = msg.value  * 2;
             //winner
             emit callbackReceived(_queryId, "Winner", msg.value * 2);
+            withdrawUserWinnings();
+
         } else {
 
             //loser
@@ -146,7 +148,6 @@ contract Coinflip is usingProvable {
         newBetter.setRandomPrice = 0;
 
         waiting[msg.sender] = newBetter;
-        withdrawUserWinnings();
 
     }
 
@@ -179,6 +180,7 @@ contract Coinflip is usingProvable {
             playerWinnings[msg.sender] = msg.value  * 2;
             //winner
             emit callbackReceived(_queryId, "Winner", msg.value * 2);
+            withdrawUserWinnings();
         } else {
 
             //loser
@@ -192,7 +194,6 @@ contract Coinflip is usingProvable {
         newBetter.setRandomPrice = 0;
 
         waiting[msg.sender] = newBetter;
-        withdrawUserWinnings();
     }
 
 

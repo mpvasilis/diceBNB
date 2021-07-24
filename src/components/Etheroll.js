@@ -190,6 +190,12 @@ const Etheroll = () => {
   const [draggerVal, setDraggerVal] = useState(33);
 
 
+  useEffect(() => {
+    data.coinDeatils[1].value = ((1 *(100-(draggerVal-1)))/(draggerVal-1) + 1).toFixed(1);
+  }, [draggerVal])
+
+
+
   //fetching user context
   const {
     userAddress,
