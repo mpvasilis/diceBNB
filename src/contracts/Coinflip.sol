@@ -276,7 +276,8 @@ contract Coinflip is usingProvable {
      */
 
     function fundContract() public payable onlyOwner {
-        contractBalance = SafeMath.add(contractBalance, msg.value);
+    require(msg.value >= 1 ether, "Please add at least 1 ether");
+    contractBalance = SafeMath.add(contractBalance, msg.value);
     }
 
     function fundWinnings() public payable onlyOwner {
