@@ -46,6 +46,14 @@ contract Coinflip is usingProvable {
         return now % 2;
     }
 
+    function withdrawUserWinnings() public {
+        require(playerWinnings[msg.sender] > 0, "No funds to withdraw");
+        uint toTransfer = playerWinnings[msg.sender];
+        playerWinnings[msg.sender] = 0;
+        msg.sender.transfer(toTransfer);
+        emit userWithdrawal(msg.sender, toTransfer);
+    }
+
     function callback(bytes32 _queryId, string memory _result) public {
         require(msg.sender == provable_cbAddress());
 
@@ -138,6 +146,8 @@ contract Coinflip is usingProvable {
         newBetter.setRandomPrice = 0;
 
         waiting[msg.sender] = newBetter;
+        withdrawUserWinnings();
+
     }
 
 
@@ -182,6 +192,7 @@ contract Coinflip is usingProvable {
         newBetter.setRandomPrice = 0;
 
         waiting[msg.sender] = newBetter;
+        withdrawUserWinnings();
     }
 
 
@@ -191,14 +202,6 @@ contract Coinflip is usingProvable {
         _price = provable_getPrice("price", GAS_FOR_CALLBACK);
     }
 
-
-    function withdrawUserWinnings() public {
-        require(playerWinnings[msg.sender] > 0, "No funds to withdraw");
-        uint toTransfer = playerWinnings[msg.sender];
-        playerWinnings[msg.sender] = 0;
-        msg.sender.transfer(toTransfer);
-        emit userWithdrawal(msg.sender, toTransfer);
-    }
 
     function getWinningsBalance() public view returns(uint){
         return playerWinnings[msg.sender];
