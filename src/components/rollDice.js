@@ -142,7 +142,7 @@ const data = {
 
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 const web3 = new Web3(Web3.givenProvider);
-const contractAddress = '0x391fe6a27937e761A7f19832363A0a729123AE06';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9   0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC 0x391fe6a27937e761A7f19832363A0a729123AE06
+const contractAddress = '0xe3ce4a8F32732d893347643709ac8C0946Da67b4';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9   0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC 0x391fe6a27937e761A7f19832363A0a729123AE06
 const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const RollDice = () => {
 
@@ -560,25 +560,26 @@ const RollDice = () => {
             >
               Your bet
             </div>
-            <div className="bet-block">
-              <div></div>
-              <div className="bet-buttons flex-x">
-                <div className="bet-input flex-x">
-                  <div className="flex-x">
-                    <span onClick={() => increment(-0.01)}>-</span>
-                    <input
-                        value={selectedVal}
-                        onChange={(e) => {
-                          var regexp = /^[0-9]*(\.[0-9]{0,2})?$/;
-                          if (regexp.test(e.target.value)) setSelectedValCheck(e.target.value);
-                        }}
-                    />
-                    <span onClick={() => increment(0.01)}>+</span>
+            {userBalance ?
+                <div className="bet-block">
+                  <div></div>
+                  <div className="bet-buttons flex-x">
+                    <div className="bet-input flex-x">
+                      <div className="flex-x">
+                        <span onClick={() => increment(-0.01)}>-</span>
+                        <input
+                            value={selectedVal}
+                            onChange={(e) => {
+                              var regexp = /^[0-9]*(\.[0-9]{0,2})?$/;
+                              if (regexp.test(e.target.value)) setSelectedValCheck(e.target.value);
+                            }}
+                        />
+                        <span onClick={() => increment(0.01)}>+</span>
+                      </div>
+                    </div>
+                    <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>
                   </div>
-                </div>
-                <div className="bet-submit flex-x" onClick={() => {flip(draggerVal.toString(),selectedVal.toString())}}>BET</div>
-              </div>
-            </div>
+                </div> :  <></> }
             {userBalance ? <></>  :  <><BrowserView>
               <div className="web3-required"><h1>Log in to MetaMask</h1><p>Please log in to MetaMask to proceed</p> </div></BrowserView>
               <MobileView>

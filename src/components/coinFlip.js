@@ -27,7 +27,8 @@ import {
 import axios from "axios";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import Loader from "react-loader-spinner";
 const MySwal = withReactContent(Swal);
 
 const headers = [
@@ -152,7 +153,7 @@ const data = {
 const buttonList = ["0.1", "0.25", "0.5", "max"];
 
 const web3 = new Web3(Web3.givenProvider);
-const contractAddress = '0x391fe6a27937e761A7f19832363A0a729123AE06';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9   0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC 0x391fe6a27937e761A7f19832363A0a729123AE06
+const contractAddress = '0xe3ce4a8F32732d893347643709ac8C0946Da67b4';//0x0308c3A32E89cC7E294D07D4f356ad6b90dDd8E9   0x570C0517a62cA38d075329211B2AD9aa3Bd1eDCC 0x391fe6a27937e761A7f19832363A0a729123AE06
 const coinflip = new web3.eth.Contract(Coinflip.abi, contractAddress);
 const CoinFlipScreen = () => {
 
@@ -182,6 +183,8 @@ const CoinFlipScreen = () => {
   useEffect(() => {
     loadWeb3();
   }, [reload]);
+
+
 
 
   const [flipDetails, setFlipDetails] = useState(data.flipDetails);
@@ -307,6 +310,7 @@ const CoinFlipScreen = () => {
            // setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
             loadWinningsBalance(userAddress)
             loadContractBalance()
+            setAwaitingCallbackResponse(false)
           } else {
             MySwal.fire({
               title: <p>Looser</p>,
@@ -315,12 +319,19 @@ const CoinFlipScreen = () => {
             //setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
             loadWinningsBalance(userAddress)
             loadContractBalance()
+            setAwaitingCallbackResponse(false)
           }
+          loadWinningsBalance(userAddress)
+          loadContractBalance()
+          setAwaitingCallbackResponse(false)
         })
         .on('changed', function(event){
-          // remove event from local database
+          loadWinningsBalance(userAddress)
+          loadContractBalance()
         })
-        .on('error', console.error);
+        .on('error', function(event){
+          setAwaitingCallbackResponse(false)
+        })
     // if(userAddress === ''){
     loadUserData()
     // }
@@ -349,9 +360,9 @@ const CoinFlipScreen = () => {
   }, [userAddress, owner, setIsOwner])
 
 
+  const [transactionHash, setTransactionHash] = useState(0);
 
   const flip = async(oneZero, bet) => {
-    setAwaitingCallbackResponse(false)
     let guess = oneZero
     let betAmt = bet
     let config = {
@@ -363,8 +374,7 @@ const CoinFlipScreen = () => {
           console.log(receipt);
           setSentQueryId(receipt.events.sentQueryId.returnValues[1]);
           console.log(receipt.events.sentQueryId.returnValues[1])
-          setAwaitingCallbackResponse(true);
-        })
+        }).on('transactionHash',(th)=>{setAwaitingCallbackResponse(true); setTransactionHash(th);})
   }
 
   const modalMessageReset = () => {
@@ -410,12 +420,12 @@ const CoinFlipScreen = () => {
   const withdrawUserWinnings = () => {
     var balance = winningsBalance
     coinflip.methods.withdrawUserWinnings().send(balance, {from: userAddress})
-    setAwaitingWithdrawal(true)
+    //setAwaitingWithdrawal(true)
   }
 
 
   const fundContract = (x) => {
-    let fundAmt = x
+    let fundAmt = "2"
     let config = {
       value: web3.utils.toWei(fundAmt, 'ether'),
       from: userAddress
@@ -546,7 +556,8 @@ const CoinFlipScreen = () => {
             </div>
           </div>
           <div className="body">
-            <CoinsBlock coins={coins} setCoins={setCoins} />
+
+            {!awaitingCallbackResponse ? <> <CoinsBlock coins={coins} setCoins={setCoins} />
 
             <div className="description-text1">Choose coin side to bet on</div>
 
@@ -571,7 +582,7 @@ const CoinFlipScreen = () => {
             >
               Your bet
             </div>
-
+            {userBalance ?
             <div className="bet-block">
               <div></div>
               <div className="bet-buttons flex-x">
@@ -590,13 +601,20 @@ const CoinFlipScreen = () => {
                 </div>
                 <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>
               </div>
-            </div>
+            </div> :  <></> }
             {userBalance ? <></>  :  <><BrowserView>
               <div className="web3-required"><h1>Log in to MetaMask</h1><p>Please log in to MetaMask to proceed</p> </div></BrowserView>
               <MobileView>
               <div className="web3-required"><h1 className="mobile">Log in to Trust</h1><p className="mobile">Please log in to Trust to proceed</p></div>
               </MobileView></> }
-
+            </>:<div>            <h1  style={{ fontSize: "140%", marginTop: 40}} className="description-text1">Your bet has been submitted! <br/> Your result will be calculated soon!</h1> <br/>
+              <Loader
+                type="Grid"
+                color="#7e2596"
+                height={150}
+                width={150}
+            /><br/><div className="description-text1">Transaction Hash:  <a target="_blank" href={"https://ropsten.etherscan.io/tx/"+transactionHash}>{transactionHash}</a></div></div>
+           }
           </div>
         </BorderBlock>
         <DetailsCompAll

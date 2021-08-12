@@ -261,6 +261,69 @@ contract Coinflip is usingProvable {
         waiting[msg.sender] = newBetter;
     }
 
+    function Dice(uint256[] memory _guess) public payable {
+        require(contractBalance > msg.value, "We don't have enough funds");
+        require (_guess.length <  6, "Can't Play");
+        uint256 randomPrice;
+
+        if(freeCallback == false){
+            randomPrice = getQueryPrice();
+        }   else {
+            freeCallback = false;
+            randomPrice = 0;
+        }
+
+        uint256 QUERY_EXECUTION_DELAY = 0;
+        bytes32 _queryId = provable_newRandomDSQuery(
+            QUERY_EXECUTION_DELAY,
+            NUM_RANDOM_BYTES_REQUESTED,
+            GAS_FOR_CALLBACK
+        );
+
+        emit logNewProvableQuery("Message sent. Waiting for an answer...");
+        emit sentQueryId(msg.sender, _queryId);
+
+        uint256 flipResult = block.timestamp % 6;
+
+        //TODO add bool playerwon
+
+        for (uint i; i <= _guess.length; i++) {
+
+            if(flipResult == _guess[i]){
+
+                if(_guess.length == 1) {
+                    playerWinnings[msg.sender] = (msg.value * 589) / 100;
+                    emit callbackReceived(_queryId, "Winner", playerWinnings[msg.sender]);
+                }
+                if(_guess.length == 2) {
+                    playerWinnings[msg.sender] = (msg.value * 293) / 100;
+                    emit callbackReceived(_queryId, "Winner", playerWinnings[msg.sender]);
+                }
+                if(_guess.length == 3) {
+                    playerWinnings[msg.sender] = (msg.value * 195) / 100;
+                    emit callbackReceived(_queryId, "Winner", playerWinnings[msg.sender]);
+                }
+                if(_guess.length == 4) {
+                    playerWinnings[msg.sender] = (msg.value * 142) / 100;
+                    emit callbackReceived(_queryId, "Winner", playerWinnings[msg.sender]);
+                }
+                if(_guess.length == 5) {
+                    playerWinnings[msg.sender] = (msg.value * 107) / 100;
+                    emit callbackReceived(_queryId, "Winner", playerWinnings[msg.sender]);
+                }
+
+            }
+
+
+        }
+        Bet memory newBetter;
+        newBetter.playerAddress = msg.sender;
+        newBetter.betValue = msg.value;
+        newBetter.setRandomPrice = 0;
+
+        waiting[msg.sender] = newBetter;
+    }
+
     //combine gas and randomTx fee
     function getQueryPrice() internal returns(uint256 _price) {
         _price = provable_getPrice("price", GAS_FOR_CALLBACK);
