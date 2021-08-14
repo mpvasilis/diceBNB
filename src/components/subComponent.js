@@ -42,8 +42,8 @@ export const TwoDiceIco = ({ value }) => {
 };
 
 export const coinsArrFlip = [
-  { index: 0, element: <ImgIco />, value: 1, selected: false },
-  { index: 1, element: <img src={coinsideA} />, value: 2, selected: true },
+  { index: 0, element: <ImgIco />, value: 0, selected: false },
+  { index: 1, element: <img src={coinsideA} />, value: 1, selected: true },
 ];
 
 export const coinsArrRollDice = [

@@ -111,6 +111,8 @@ const CoinFlipScreen = () => {
   const [tableData, setTableData] = useState(null);
   const [selectedCoin, setSelectedCoin] = useState(0);
   const [guessNumber, setguessNumber] = useState(0);
+  const [BetAmount, setbetAmt] = useState(0);
+
 
 
 
@@ -220,22 +222,19 @@ const CoinFlipScreen = () => {
         .on('data', function(event){
           console.log(event); // same results as the optional callback above
           if(event.returnValues[1] === 'Winner'){
+            axios.post('http://localhost:8081/api/games',{address:event.address,beton:guessNumber,bet:BetAmount,game:"CoinFlip",result:guessNumber}).then(r=>{
+              console.log(r.data);
+            })
             MySwal.fire({
               title: <p>Winner</p>,
               text:'You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
             })
            // setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
-            axios.post('http://localhost:8081/api/games',{address:userAddress,beton:guessNumber,bet:betAmt,game:"CoinFlip",result:guessNumber}).then(r=>{
-              console.log(r.data);
-            })
+
             loadWinningsBalance(userAddress)
             loadContractBalance()
             setAwaitingCallbackResponse(false)
           } else {
-            MySwal.fire({
-              title: <p>Looser</p>,
-              text:'You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
-            })
             let Res;
             if(guessNumber==1){
               Res=0;
@@ -243,9 +242,14 @@ const CoinFlipScreen = () => {
             else{
               Res=1;
             }
-            axios.post('http://localhost:8081/api/games',{address:userAddress,beton:guessNumber,bet:betAmt,game:"CoinFlip",result:Res}).then(r=>{
+            axios.post('http://localhost:8081/api/games',{address:event.address,beton:guessNumber,bet:BetAmount,game:"CoinFlip",result:Res}).then(r=>{
               console.log(r.data);
             })
+            MySwal.fire({
+              title: <p>Looser</p>,
+              text:'You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
+            })
+
             //setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
             loadWinningsBalance(userAddress)
             loadContractBalance()
@@ -308,6 +312,7 @@ const CoinFlipScreen = () => {
           setAwaitingCallbackResponse(true);
           setTransactionHash(th);
           setguessNumber(parseInt(guess));
+          setbetAmt(betAmt);
 
         })
   }
@@ -457,24 +462,31 @@ const CoinFlipScreen = () => {
   }, [coins])
 
 
+  const MINUTE_MS = 3000;
 
   useEffect(() => {
-  axios.get('http://localhost:8081/api/games').then(r=>{
-  console.log(r.data);
-  let arr = [];
-    r.data.forEach(item => {
-      arr.push({
-        player: item.address.substring(0, 6),
-        bet: item.bet,
-        result: item.result,
-        jackpot: "778",
-        resultArr: [parseInt(item.beton)],
-        betArr: [parseInt(item.beton)],
+    const interval = setInterval(() => {
+      axios.get('http://localhost:8081/api/games').then(r=>{
+        console.log(r.data);
+        let arr = [];
+        r.data.forEach(item => {
+          console.log(item);
+          arr.push({
+            player: item.address.substring(0, 6),
+            bet: item.bet,
+            result: item.result,
+            jackpot: "778",
+            resultArr: [parseInt(item.result)],
+            betArr: [parseInt(item.beton)],
+          })
+        })
+        setTableData(arr);
       })
-    })
-    setTableData(arr);
-  })
-  })
+    }, MINUTE_MS);
+
+    return () => clearInterval(interval);
+  }, [])
+
 // setHistoryView(!historyView)
   return (
     <div className="wrapper">
