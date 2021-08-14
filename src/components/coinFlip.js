@@ -61,92 +61,7 @@ const data = {
     },
   ],
   tableDetails: [
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-      resultArr: [1],
-      betArr: [1],
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-      resultArr: [2],
-      betArr: [2],
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-      resultArr: [1],
-      betArr: [2],
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-      resultArr: [1],
-      betArr: [2],
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x4fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
-    {
-      player: "0x3fder",
-      bet: "1.00",
-      result: "33",
-      jackpot: "778",
-    },
+
   ],
 };
 
@@ -193,8 +108,10 @@ const CoinFlipScreen = () => {
   const [onlyMeSelected, setOnlyMeSelected] = useState(false);
   const [selectedVal, setSelectedVal] = useState(0);
   const [historyView, setHistoryView] = useState(true);
-  const [tableData, setTableData] = useState(data.tableDetails);
+  const [tableData, setTableData] = useState(null);
   const [selectedCoin, setSelectedCoin] = useState(0);
+  const [guessNumber, setguessNumber] = useState(0);
+
 
 
   //fetching user context
@@ -308,6 +225,9 @@ const CoinFlipScreen = () => {
               text:'You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
             })
            // setOutcomeMessage('You Won ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!')
+            axios.post('http://localhost:8081/api/games',{address:userAddress,beton:guessNumber,bet:betAmt,game:"CoinFlip",result:guessNumber}).then(r=>{
+              console.log(r.data);
+            })
             loadWinningsBalance(userAddress)
             loadContractBalance()
             setAwaitingCallbackResponse(false)
@@ -315,6 +235,16 @@ const CoinFlipScreen = () => {
             MySwal.fire({
               title: <p>Looser</p>,
               text:'You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH!'
+            })
+            let Res;
+            if(guessNumber==1){
+              Res=0;
+            }
+            else{
+              Res=1;
+            }
+            axios.post('http://localhost:8081/api/games',{address:userAddress,beton:guessNumber,bet:betAmt,game:"CoinFlip",result:Res}).then(r=>{
+              console.log(r.data);
             })
             //setOutcomeMessage('You lost ' + web3.utils.fromWei(event.returnValues[2]) + ' ETH...')
             loadWinningsBalance(userAddress)
@@ -374,7 +304,12 @@ const CoinFlipScreen = () => {
           console.log(receipt);
           setSentQueryId(receipt.events.sentQueryId.returnValues[1]);
           console.log(receipt.events.sentQueryId.returnValues[1])
-        }).on('transactionHash',(th)=>{setAwaitingCallbackResponse(true); setTransactionHash(th);})
+        }).on('transactionHash',(th)=>{
+          setAwaitingCallbackResponse(true);
+          setTransactionHash(th);
+          setguessNumber(parseInt(guess));
+
+        })
   }
 
   const modalMessageReset = () => {
@@ -493,12 +428,12 @@ const CoinFlipScreen = () => {
     let dummy = tableData;
     dummy[k] = i;
     console.log(dummy);
-    setTableData([...dummy]);
+   // setTableData([...dummy]);
   };
 
   useEffect(() => {
     if (onlyMeSelected) {
-      setTableData([...data.tableDetails.filter((i, k) => i.player == id)]);
+      setTableData([...data.tableDetails.filter((i, k) => i.player == userAddress.substring(0,6))]);
     } else setTableData([...data.tableDetails]);
   }, [onlyMeSelected]);
 
@@ -524,8 +459,20 @@ const CoinFlipScreen = () => {
 
 
   useEffect(() => {
-  axios.get('http://45.93.136.16:8081/api/games').then(r=>{
+  axios.get('http://localhost:8081/api/games').then(r=>{
   console.log(r.data);
+  let arr = [];
+    r.data.forEach(item => {
+      arr.push({
+        player: item.address.substring(0, 6),
+        bet: item.bet,
+        result: item.result,
+        jackpot: "778",
+        resultArr: [parseInt(item.beton)],
+        betArr: [parseInt(item.beton)],
+      })
+    })
+    setTableData(arr);
   })
   })
 // setHistoryView(!historyView)

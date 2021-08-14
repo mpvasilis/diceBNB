@@ -141,8 +141,12 @@ const CoinIcon = ({ data, page, type }) => {
       arr = [];
       break;
   }
-
+if(data!==null && data.length >0){
   return data.map((x, y) => arr.filter((i, k) => x == i.value)[0].element);
+}
+else{
+  return <></>
+  }
 };
 
 export const Table = ({ headers, data, setOpened, page }) => {
@@ -154,7 +158,7 @@ export const Table = ({ headers, data, setOpened, page }) => {
         ))}
       </div>
       <div className="body">
-        {data.map((i, k) => (
+        {data!== null && data.map((i, k) => (
           <>
             <div
               className="item"
