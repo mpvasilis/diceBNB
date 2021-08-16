@@ -6,6 +6,16 @@ import './SafeMath.sol';
 contract Coinflip is usingProvable {
     using SafeMath for uint;
 
+    uint randNonce = 0;
+
+    function randMod(uint _modulus) internal returns(uint)
+    {
+        randNonce++;
+        return uint(keccak256(abi.encodePacked(now,
+            msg.sender,
+            randNonce))) % _modulus;
+    }
+
     struct Bet {
         address playerAddress;
         uint betValue;
