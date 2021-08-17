@@ -106,7 +106,7 @@ const CoinFlipScreen = () => {
   const [coins, setCoins] = useState(coinsArr);
   const [id, setId] = useState("0x3fder");
   const [onlyMeSelected, setOnlyMeSelected] = useState(false);
-  const [selectedVal, setSelectedVal] = useState(0);
+  const [selectedVal, setSelectedVal] = useState(0.1);
   const [historyView, setHistoryView] = useState(true);
   const [tableData, setTableData] = useState(null);
   const [selectedCoin, setSelectedCoin] = useState(0);
@@ -547,15 +547,15 @@ const CoinFlipScreen = () => {
               <div className="bet-buttons flex-x">
                 <div className="bet-input flex-x">
                   <div className="flex-x">
-                    <span onClick={() => increment(-0.01)}>-</span>
+                    <span onClick={() => {if(selectedVal>0.01) increment(-0.01)}}>-</span>
                     <input
                         value={selectedVal}
                         onChange={(e) => {
                           var regexp = /^[0-9]*(\.[0-9]{0,2})?$/;
-                          if (regexp.test(e.target.value)) setSelectedValCheck(e.target.value);
+                          if (regexp.test(e.target.value) && e.target.value>0.01) setSelectedValCheck(e.target.value);
                         }}
                     />
-                    <span onClick={() => increment(0.01)}>+</span>
+                    <span onClick={() => {increment(0.01)}}>+</span>
                   </div>
                 </div>
                 <div className="bet-submit flex-x" onClick={() => {flip(selectedCoin.toString(),selectedVal.toString())}}>BET</div>

@@ -183,7 +183,7 @@ const Etheroll = () => {
   const [coins, setCoins] = useState(coinsArr);
   const [id, setId] = useState("0x3fder");
   const [onlyMeSelected, setOnlyMeSelected] = useState(false);
-  const [selectedVal, setSelectedVal] = useState(0);
+  const [selectedVal, setSelectedVal] = useState(0.1);
   const [historyView, setHistoryView] = useState(true);
   const [tableData, setTableData] = useState(data.tableDetails);
   const [selectedCoin, setSelectedCoin] = useState(0);
@@ -191,7 +191,7 @@ const Etheroll = () => {
 
 
   useEffect(() => {
-    data.coinDeatils[1].value = ((1 *(100-(draggerVal-1)))/(draggerVal-1) + 1).toFixed(1);
+    data.coinDeatils[1].value = ((1 *(100-(draggerVal-1)))/(draggerVal-1) + 1).toFixed(2);
   }, [draggerVal])
 
 
@@ -571,12 +571,12 @@ const Etheroll = () => {
                   <div className="bet-buttons flex-x">
                     <div className="bet-input flex-x">
                       <div className="flex-x">
-                        <span onClick={() => increment(-0.01)}>-</span>
+                        <span onClick={() => {if(selectedVal>0.01) increment(-0.01)}}>-</span>
                         <input
                             value={selectedVal}
                             onChange={(e) => {
                               var regexp = /^[0-9]*(\.[0-9]{0,2})?$/;
-                              if (regexp.test(e.target.value)) setSelectedValCheck(e.target.value);
+                              if (regexp.test(e.target.value) && e.target.value>0.01) setSelectedValCheck(e.target.value);
                             }}
                         />
                         <span onClick={() => increment(0.01)}>+</span>

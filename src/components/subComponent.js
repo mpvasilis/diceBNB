@@ -236,7 +236,7 @@ export const SliderComp = ({ value, setDraggerVal }) => (
   <div className="slider-comp">
     <SliderWithTooltip
       value={[value]}
-      onChange={(val) => setDraggerVal(val)}
+      onChange={(val) => {if(val<=97 && val>=1) setDraggerVal(val)}}
       trackStyle={{
         backgroundImage: "linear-gradient(to right, #ff6002, #c22de1)",
         height: "44px",

@@ -9,16 +9,9 @@ import iconD from "../assets/Group 30.svg";
 
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useHistory } from "react-router";
+import axios from "axios";
 
-const state = {
-  wagers: { value: "268.72", detail: "742 bets" },
-  recent: { value: "0.40", detail: "won by 0x345" },
-  topwinners: [
-    { id: "0x34554", value: "27.89" },
-    { id: "0x34554", value: "27.89" },
-    { id: "0x34554", value: "27.89" },
-  ],
-};
+
 const RightBlock = ({ item, index }) => {
   const history = useHistory();
   return (
@@ -36,6 +29,37 @@ const RightBlock = ({ item, index }) => {
   );
 };
 const Home = () => {
+  const [state, setState] = useState({
+    wagers: { value: "268.72", detail: "742 bets" },
+    recent: { value: "0.40", detail: "won by 0x345" },
+    topwinners: [
+      { id: "0x34554", value: "27.89" },
+      { id: "0x34554", value: "27.89" },
+      { id: "0x34554", value: "27.89" },
+    ],
+    status:false,
+  });
+
+
+  useEffect(() => {
+      axios.get('http://localhost:8080/api/stats').then(r=>{
+        state.wagers.value = r.data.wagers_24h;
+        state.wagers.detail = r.data.wagers_24h_bets + " bets";
+        state.recent.value = r.data.wagers_24h_jackpot;
+        state.topwinners[0].id = Object.keys(r.data.top_winners)[0].substr(0,6);
+        state.topwinners[0].value = Object.values(r.data.top_winners)[0];
+        state.topwinners[1].id = Object.keys(r.data.top_winners)[1].substr(0,6);
+        state.topwinners[1].value = Object.values(r.data.top_winners)[1];
+        state.topwinners[2].id = Object.keys(r.data.top_winners)[2].substr(0,6);
+        state.topwinners[2].value = Object.values(r.data.top_winners)[2];
+        state.status = true;
+        console.log(r.data);
+        console.log(Object.keys(r.data.top_winners));
+        console.log(Object.values(r.data.top_winners));
+        setState(state);
+      })
+
+  }, [])
   const formatValue = (value) => value.toFixed(2);
 
   const rightBlocks = [
@@ -81,15 +105,15 @@ const Home = () => {
             <RightBlock item={i} index={k} key={k} />
           ))}
         </div>
-        <div className="left-blocks">
+        {state.status === true &&  <div className="left-blocks">
           <div className="left-block a">
             <div>24h wagers</div>
             <div>
               <span>
                 <AnimatedNumber
-                  value={state.wagers.value}
-                  formatValue={formatValue}
-                  duration={3000}
+                    value={state.wagers.value}
+                    formatValue={formatValue}
+                    duration={3000}
                 />
               </span>
               <span> ETH</span>
@@ -101,32 +125,32 @@ const Home = () => {
             <div>
               <span>
                 <AnimatedNumber
-                  value={state.recent.value}
-                  formatValue={formatValue}
-                  duration={3000}
+                    value={state.recent.value}
+                    formatValue={formatValue}
+                    duration={3000}
                 />
               </span>
               <span> ETH</span>
             </div>
-            <div>{state.recent.detail}</div>
+            <div>Jackpot</div>
           </div>
           <div className="left-block c">
             <div>24h top winners</div>
             {state.topwinners.map((i, k) => (
-              <div key={k} className="items">
-                <span>{i.id}</span>
-                <span>
+                <div key={k} className="items">
+                  <span>{i.id}</span>
+                  <span>
                   <AnimatedNumber
-                    value={i.value}
-                    formatValue={formatValue}
-                    duration={3000}
+                      value={i.value}
+                      formatValue={formatValue}
+                      duration={3000}
                   />
                 </span>
-                <span>ETH</span>
-              </div>
+                  <span>ETH</span>
+                </div>
             ))}
           </div>
-        </div>
+        </div>}
       </div>
       <div className="right flex-wrap only-mob-bottom">
         {rightBlocks.map((i, k) => (
