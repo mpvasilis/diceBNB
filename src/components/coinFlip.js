@@ -466,7 +466,7 @@ const CoinFlipScreen = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      axios.get('http://localhost:8081/api/games').then(r=>{
+      axios.get('https://intense-harbor-90383.herokuapp.com/api/games/today').then(r=>{
         console.log(r.data);
         let arr = [];
         r.data.forEach(item => {

@@ -42,7 +42,7 @@ const Home = () => {
 
 
   useEffect(() => {
-      axios.get('http://localhost:8080/api/stats').then(r=>{
+      axios.get('https://intense-harbor-90383.herokuapp.com/api/stats').then(r=>{
         state.wagers.value = r.data.wagers_24h;
         state.wagers.detail = r.data.wagers_24h_bets + " bets";
         state.recent.value = r.data.wagers_24h_jackpot;
