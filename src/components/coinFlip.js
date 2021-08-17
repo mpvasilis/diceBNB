@@ -56,7 +56,7 @@ const data = {
     {
       heading: "Jackpot contains",
       value: "0.597",
-      des: "Lucky number is 888!",
+      des: "0.1% jackpot chance!",
       param: "ETH",
     },
   ],
@@ -89,9 +89,18 @@ const CoinFlipScreen = () => {
     }
     // Non-dapp browsers...
     else {
-      window.alert(
-          "ATTENTION! Non-Ethereum browser detected. You should install MetaMask!"
-      );
+      MySwal.fire({
+        title: <p>Not supported browser</p>,
+        html: (<div><BrowserView>
+          <div className="web3-required"><h1>Install MetaMask</h1><p>You need a Web3-compatible wallet to play our games
+          </p> </div></BrowserView>
+          <MobileView>
+            <div className="web3-required"><h1 className="mobile">Install Trust wallet</h1><p className="mobile">Please use Trust wallet to play our games</p></div>
+          </MobileView></div>),
+        showConfirmButton:false,
+        showCancelButton:false,
+
+      })
     }
   }
 
@@ -222,7 +231,7 @@ const CoinFlipScreen = () => {
         .on('data', function(event){
           console.log(event); // same results as the optional callback above
           if(event.returnValues[1] === 'Winner'){
-            axios.post('http://localhost:8081/api/games',{address:event.address,beton:guessNumber,bet:BetAmount,game:"CoinFlip",result:guessNumber}).then(r=>{
+            axios.post('https://intense-harbor-90383.herokuapp.com/api/games',{address:event.address,beton:[guessNumber],bet:BetAmount,game:"CoinFlip",result:[guessNumber], winner:true}).then(r=>{
               console.log(r.data);
             })
             MySwal.fire({
@@ -242,7 +251,7 @@ const CoinFlipScreen = () => {
             else{
               Res=1;
             }
-            axios.post('http://localhost:8081/api/games',{address:event.address,beton:guessNumber,bet:BetAmount,game:"CoinFlip",result:Res}).then(r=>{
+            axios.post('https://intense-harbor-90383.herokuapp.com/api/games',{address:event.address,beton:[guessNumber],bet:BetAmount,game:"CoinFlip",result:[Res], winner:false}).then(r=>{
               console.log(r.data);
             })
             MySwal.fire({
@@ -465,8 +474,24 @@ const CoinFlipScreen = () => {
   const MINUTE_MS = 3000;
 
   useEffect(() => {
+    axios.get('https://intense-harbor-90383.herokuapp.com/api/games/today?game=CoinFlip').then(r=>{
+      console.log(r.data);
+      let arr = [];
+      r.data.forEach(item => {
+        console.log(item);
+        arr.push({
+          player: item.address.substring(0, 6),
+          bet: item.bet,
+          result: item.result,
+          jackpot: "778",
+          resultArr: [parseInt(item.result)],
+          betArr: [parseInt(item.beton)],
+        })
+      })
+      setTableData(arr);
+    })
     const interval = setInterval(() => {
-      axios.get('https://intense-harbor-90383.herokuapp.com/api/games/today').then(r=>{
+      axios.get('https://intense-harbor-90383.herokuapp.com/api/games/today?game=CoinFlip').then(r=>{
         console.log(r.data);
         let arr = [];
         r.data.forEach(item => {
