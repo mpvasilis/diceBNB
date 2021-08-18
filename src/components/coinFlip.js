@@ -201,7 +201,8 @@ const CoinFlipScreen = () => {
 
   const loadUserData = useCallback(async () => {
         await loadUserAddress().then(response => {
-          setuserAddr(response);
+          setuserAddr(web3.currentProvider.selectedAddress);
+          console.log(web3.currentProvider.selectedAddress);
           setUserAddress(response)
           loadUserBalance(response)
           loadWinningsBalance(response)
@@ -222,7 +223,7 @@ const CoinFlipScreen = () => {
           console.log(event); // same results as the optional callback above
           if (event.returnValues[1] === 'Winner') {
             axios.post('https://intense-harbor-90383.herokuapp.com/api/games', {
-              address: userAddress,
+              address: web3.currentProvider.selectedAddress,
               beton: [parseInt(guessNumber)],
               bet: BetAmount,
               game: "CoinFlip",
@@ -250,7 +251,7 @@ const CoinFlipScreen = () => {
               Res = 1;
             }
             axios.post('https://intense-harbor-90383.herokuapp.com/api/games', {
-              address: userAddress,
+              address: web3.currentProvider.selectedAddress,
               beton: [parseInt(guessNumber)],
               bettrx: event.transactionHash,
               bet: BetAmount,
@@ -318,7 +319,7 @@ const CoinFlipScreen = () => {
       value: web3.utils.toWei(betAmt, 'ether'),
       from: userAddress
     }
-    setuserAddr(userAddress);
+    setuserAddr(window.web3.currentProvider.selectedAddress);
     coinflip.methods.flip(guess).send(config)
         .on('receipt', function (receipt) {
           console.log(receipt);
@@ -455,7 +456,7 @@ const CoinFlipScreen = () => {
 
   useEffect(() => {
     if (onlyMeSelected) {
-      setTableData([...data.tableDetails.filter((i, k) => i.player == userAddress.substring(0, 6))]);
+      setTableData([...data.tableDetails.filter((i, k) => i.player == web3.currentProvider.selectedAddress.substring(0, 6))]);
     } else setTableData([...data.tableDetails]);
   }, [onlyMeSelected]);
 
