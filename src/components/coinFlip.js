@@ -485,7 +485,6 @@ const CoinFlipScreen = () => {
       console.log(r.data);
       let arr = [];
       r.data.forEach(item => {
-        console.log(item);
         arr.push({
           player: item.address.substring(0, 6),
           bet: item.bet+"ETH",
@@ -504,7 +503,6 @@ const CoinFlipScreen = () => {
         console.log(r.data);
         let arr = [];
         r.data.forEach(item => {
-          console.log(item);
           arr.push({
             player: item.address.substring(0, 6),
             bet: item.bet+"ETH",
