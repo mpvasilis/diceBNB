@@ -201,6 +201,7 @@ const CoinFlipScreen = () => {
 
   const loadUserData = useCallback(async () => {
         await loadUserAddress().then(response => {
+          setuserAddr(response);
           setUserAddress(response)
           loadUserBalance(response)
           loadWinningsBalance(response)
@@ -221,7 +222,7 @@ const CoinFlipScreen = () => {
           console.log(event); // same results as the optional callback above
           if (event.returnValues[1] === 'Winner') {
             axios.post('https://intense-harbor-90383.herokuapp.com/api/games', {
-              address: userAddr,
+              address: userAddress,
               beton: [parseInt(guessNumber)],
               bet: BetAmount,
               game: "CoinFlip",
@@ -249,7 +250,7 @@ const CoinFlipScreen = () => {
               Res = 1;
             }
             axios.post('https://intense-harbor-90383.herokuapp.com/api/games', {
-              address: userAddr,
+              address: userAddress,
               beton: [parseInt(guessNumber)],
               bettrx: event.transactionHash,
               bet: BetAmount,
@@ -317,13 +318,13 @@ const CoinFlipScreen = () => {
       value: web3.utils.toWei(betAmt, 'ether'),
       from: userAddress
     }
+    setuserAddr(userAddress);
     coinflip.methods.flip(guess).send(config)
         .on('receipt', function (receipt) {
           console.log(receipt);
           setSentQueryId(receipt.events.sentQueryId.returnValues[1]);
           console.log(receipt.events.sentQueryId.returnValues[1])
         }).on('transactionHash', (th) => {
-      setuserAddr(userAddress);
       setAwaitingCallbackResponse(true);
       setTransactionHash(th);
       setguessNumber(parseInt(guess));
@@ -487,7 +488,9 @@ const CoinFlipScreen = () => {
         console.log(item);
         arr.push({
           player: item.address.substring(0, 6),
-          bet: item.bet,
+          bet: item.bet+"ETH",
+          betOn: parseInt(item.beton),
+          betTrx: item.bettrx,
           result: item.result,
           jackpot: item.jackpot,
           resultArr: [parseInt(item.result)],
@@ -504,9 +507,11 @@ const CoinFlipScreen = () => {
           console.log(item);
           arr.push({
             player: item.address.substring(0, 6),
-            bet: item.bet,
+            bet: item.bet+"ETH",
+            betOn: parseInt(item.beton),
+            betTrx: item.bettrx,
             result: item.result,
-            jackpot: "778",
+            jackpot: item.jackpot,
             resultArr: [parseInt(item.result)],
             betArr: [parseInt(item.beton)],
           })
