@@ -3,7 +3,7 @@ require("babel-polyfill");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
-const MNEMONIC = 'aspect lamp jacket pet vehicle essence child salad uphold fold nurse judge';
+const MNEMONIC = process.env.MNEMONIC;
 
 module.exports = {
     networks: {
@@ -14,7 +14,7 @@ module.exports = {
         },
         ropsten: {
             provider: function() {
-              return new HDWalletProvider(MNEMONIC, "https://ropsten.infura.io/v3/5f552c63b2834a588871339fd81f7943")
+              return new HDWalletProvider(MNEMONIC, process.env.NETWORK_URL)
             },
             network_id: 3,
             gas: 8000000
