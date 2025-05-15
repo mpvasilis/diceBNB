@@ -7,6 +7,7 @@ Dice games on the Binance Smart Chain (BNB).
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Technologies Used](#technologies-used)
 ---
 
@@ -24,6 +25,23 @@ DiceBNB is a decentralized application (dApp) for playing dice games on the Bina
 - Provably fair mechanics ensuring each roll is random and unbiased.
 
 ---
+## Screenshots
+
+### Home Page
+![Home Page](https://i.imgur.com/7nN2ysZ.png)
+
+### Coin Flip
+![Coin Flip](https://i.imgur.com/d2ScPg6.png)
+
+### Roll a Dice
+![Roll a Dice](https://i.imgur.com/wvGtU72.png)
+
+### Two Dice
+![Two Dice](https://i.imgur.com/sTAKrQF.png)
+
+### Etheroll
+![Etheroll](https://i.imgur.com/GoxHOIG.png)
+
 
 ## Technologies Used
 
